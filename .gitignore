@@ -3,3 +3,14 @@ node_modules/
 .DS_Store
 dist/
 .tmp/
+
+# 推广素材
+.promo/
+PROMO_VIDEO_WORKFLOW.md
+tools/
+
+# 开发工作记忆
+.workbuddy/
+
+# Windows
+Thumbs.db
