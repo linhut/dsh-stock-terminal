@@ -1,6 +1,6 @@
 {
   "name": "@linxin666/dsh-client-ui-skin-stock",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "股市行情皮肤+功能插件：从 Trading Terminal 皮肤演进而来的自选跑马灯、实时行情、自选列表与持仓盈亏面板（A股/港股/美股/指数/加密/外汇，腾讯+Binance+Frankfurter 聚合）",
   "author": "linhut",
   "type": "module",
