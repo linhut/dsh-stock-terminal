@@ -21,6 +21,16 @@
 | 行情代理 `/plugins/dsh-stock/api/quotes?symbols=…` | ✅ 200，沪深港美/加密/外汇全源实时 |
 | 皮肤中心 active | ✅ stock |
 
+## 追加更新（2026-08 后续迭代）
+
+1. **搜索联想在线兜底**：宿主新增 `GET /plugins/dsh-stock/api/suggest`（新浪建议 API 代理，GBK 解码）；
+   客户端词典秒出 + 300ms 防抖调 API 合并去重 —— 任意 A股/港股/美股（如 `csbm`→常山北明）可联想。
+   ⚠️ 宿主路由需重启 `dsh web` 生效。
+2. **设置入口升级**：系统设置侧边栏注册独立「股市行情」分区（`settings.section` 槽位，
+   `label: "股市行情"`），内容含 行情设置（刷新间隔/跑马灯）+ 自选列表（搜索联想增删）
+   + 持仓管理（代码/数量/成本增删更新），与面板同一份 localStorage，实时双向一致。
+3. **上线发布**：GitHub public（linhut/dsh-stock-terminal）+ AtomGit + GitCode 多仓同步。
+
 ## 验证命令（可随时复跑）
 
 ```powershell
