@@ -1,0 +1,29 @@
+{
+  "id": "stock",
+  "name": "股市行情",
+  "nameEn": "Stock Quotes Terminal",
+  "author": "linhut",
+  "tagline": "自选跑马灯 · 实时行情 · 自选列表与持仓盈亏",
+  "description": "从 Trading Terminal 皮肤演进而来的股票行情皮肤与功能插件：顶栏自选跑马灯、状态栏交易时段与指数快照，右下角行情面板支持自选列表（增删/排序）与持仓（数量/成本/盈亏）管理。A股/港股/美股/指数/加密/外汇实时报价由宿主代理聚合腾讯 + Binance + Frankfurter。",
+  "tags": [
+    "stock",
+    "trading",
+    "ticker",
+    "watchlist",
+    "positions",
+    "live",
+    "terminal"
+  ],
+  "accent": "#e02e3d",
+  "bodyAttr": "data-dsh-stock",
+  "package": "@linxin666/dsh-client-ui-skin-stock",
+  "wiring": {
+    "id": "ui-skin-stock",
+    "bundleWired": false
+  },
+  "preview": {
+    "light": "",
+    "dark": ""
+  },
+  "order": 99
+}

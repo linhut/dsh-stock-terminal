@@ -1,0 +1,6 @@
+# 股市行情终端 (dsh-stock-terminal) bundle patch:
+# 把本插件的 dsh.client 行插入 web 插件名册。宿主侧同理（同一个 entry 同时
+# 挂宿主路由与浏览器 bundle）。
+- insert:
+    - id: ui-skin-stock
+      name: '@linxin666/dsh-client-ui-skin-stock'

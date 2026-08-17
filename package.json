@@ -1,0 +1,51 @@
+{
+  "name": "@linxin666/dsh-client-ui-skin-stock",
+  "version": "0.1.0",
+  "description": "股市行情皮肤+功能插件：从 Trading Terminal 皮肤演进而来的自选跑马灯、实时行情、自选列表与持仓盈亏面板（A股/港股/美股/指数/加密/外汇，腾讯+Binance+Frankfurter 聚合）",
+  "author": "linhut",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [],
+      "platform": "web"
+    }
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "dsh-plugin",
+    "dsh",
+    "deepseek-harness",
+    "web-ui",
+    "skin",
+    "stock",
+    "trading",
+    "ticker",
+    "watchlist",
+    "positions",
+    "行情",
+    "自选",
+    "持仓",
+    "跑马灯"
+  ],
+  "files": [
+    "lib",
+    "skin.json",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "echo 本插件为手写无构建产物；直接发布 lib/ 即可"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linhut/dsh-stock-terminal.git"
+  }
+}
