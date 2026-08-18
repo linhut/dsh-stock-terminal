@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-DSH%20Web%20GUI-4a5568.svg)](#安装)
 [![Version](https://img.shields.io/badge/version-1.1.0-orange.svg)](./package.json)
-[![dsh-manager](https://img.shields.io/badge/dsh--manager-market-8b5cf6)](https://github.com/linhut/dsh-manager)
+[![awesome-dsh-plugin](https://img.shields.io/badge/awesome--dsh--plugin-PR%20%231766-8b5cf6)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766)
 
 ---
 
@@ -34,7 +34,7 @@
 
 ## 📦 安装
 
-本插件为 **DSH Web GUI 外部插件**，可通过 [dsh-manager](https://github.com/linhut/dsh-manager) 插件市场一键安装，也支持 CLI 和手动安装。
+本插件为 **DSH Web GUI 外部插件**，支持 CLI 一键安装、手动安装，也可通过插件市场（awesome-dsh-plugin 收录后）一键安装。
 
 ### 方式一：CLI 一键安装（推荐 ⭐）
 
@@ -94,10 +94,15 @@ git clone https://github.com/linhut/dsh-stock-terminal.git \
 
 **③ 重启 dsh web**（见方式一的重启说明），刷新浏览器即可。
 
-### 方式三：插件市场一键安装（待收录）
+### 方式三：插件市场一键安装
 
-已提交 [dsh-market PR #160](https://github.com/dsh-market/dsh-market/pull/160)，
-合并后可在 **设置 → 插件市场** 搜索 `dsh-stock-terminal`，App Store 式一键安装、热启用。
+**机制说明**：DSH 官方插件市场（dsh-market）的目录来自
+[awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
+精选列表（线上 https://awesome-dsh-plugin.com/plugins.json 实时生成）。
+本插件已提交收录 [PR #1766](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766)，
+合并后（通常 1 天内）即可在 **设置 → 插件市场** 搜索 stock 一键安装。
+
+也可以使用自研的 [dsh-manager](https://github.com/linhut/dsh-manager) 插件市场安装。
 
 ### 安装后
 
@@ -229,5 +234,5 @@ dsh-stock-terminal/
 
 ---
 
-*由 [linhut](https://github.com/linhut) 维护，已提交 [dsh-market](https://github.com/dsh-market/dsh-market) 收录。*
+*由 [linhut](https://github.com/linhut) 维护，已提交 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766) 收录。*
 *DSH 插件安装参考了 [dsh-market](https://github.com/dsh-market/dsh-market) 的 `dsh plugin` 命令模式。*
