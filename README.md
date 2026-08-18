@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-DSH%20Web%20GUI-4a5568.svg)](#安装)
 [![Version](https://img.shields.io/badge/version-1.1.0-orange.svg)](./package.json)
-[![dsh-market](https://img.shields.io/badge/dsh--market-PR%20%23160-8b5cf6)](https://github.com/dsh-market/dsh-market/pull/160)
+[![dsh-manager](https://img.shields.io/badge/dsh--manager-market-8b5cf6)](https://github.com/linhut/dsh-manager)
 
 ---
 
@@ -34,7 +34,7 @@
 
 ## 📦 安装
 
-本插件为 **DSH Web GUI 外部插件**，与 dsh-market 收录的 [dsh-stock-watch](https://github.com/Awu12277/dsh-stock-watch)、[dsh-shortcuts](https://github.com/Ricketts-Guo/dsh-shortcuts) 等插件采用相同的安装模式。
+本插件为 **DSH Web GUI 外部插件**，可通过 [dsh-manager](https://github.com/linhut/dsh-manager) 插件市场一键安装，也支持 CLI 和手动安装。
 
 ### 方式一：CLI 一键安装（推荐 ⭐）
 
