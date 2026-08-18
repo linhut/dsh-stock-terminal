@@ -36,52 +36,100 @@
 
 本插件为 **DSH Web GUI 外部插件**，与 dsh-market 收录的 [dsh-stock-watch](https://github.com/Awu12277/dsh-stock-watch)、[dsh-shortcuts](https://github.com/Ricketts-Guo/dsh-shortcuts) 等插件采用相同的安装模式。
 
-### 方式一：CLI 一键安装（推荐）
+### 方式一：CLI 一键安装（推荐 ⭐）
+
+DSH 自带 `dsh plugin` 命令（对 pnpm 的封装），会自动完成依赖安装 + bundle 注册：
 
 ```sh
-# 从 GitHub 安装（dsh 自动处理 pnpm 安装 + bundle 注册）
 dsh plugin --profile web add github:linhut/dsh-stock-terminal
-
-# 重启 dsh web 使插件生效（杀进程重新启动，或 terminal 中 Ctrl+C 后重跑）
-# 找到原启动命令，重新执行即可（通常是下面这样）：
-# node E:\npm-global\node_modules\@deepseek-ai\dsh\lib\bin.js web
 ```
 
-> 若提示 `allowBuilds` 错误，将 `@linxin666/dsh-client-ui-skin-stock` 加入
-> `~/.dsh/profiles/web/pnpm-workspace.yaml` 的 `allowBuilds` 列表后重试。
->
-> 若 `dsh plugin` 命令不可用，请升级 DSH 至 `0.1.0-rc.6` 或更新版本。
+执行后你会看到类似输出：
 
-### 方式二：手动安装
+```
+dependencies:
++ @linxin666/dsh-client-ui-skin-stock github:linhut/dsh-stock-terminal
+Done in 8.3s using pnpm v11.22.0
+```
+
+它自动做了三件事：
+
+1. **安装依赖** → 写入 `~/.dsh/profiles/web/package.json` 的 `dependencies`
+2. **注册 bundle** → 把 `@linxin666/dsh-client-ui-skin-stock` 追加进
+   `dsh.profile.bundles`（与 `dsh-web-ui-all`、`modlens` 同队列）
+3. **文件就位** → `node_modules/@linxin666/dsh-client-ui-skin-stock/` 下 lib/skin.json/patch 齐全
+
+然后**重启 dsh web** 使 bundle 加载生效：
+
+```sh
+# 找到当前 dsh web 进程 PID 杀掉后重新启动
+# （Windows：任务管理器 / netstat -ano | findstr 3080）
+node E:\npm-global\node_modules\@deepseek-ai\dsh\lib\bin.js web
+```
+
+> **常见问题**
+> - 提示 `allowBuilds` / `Ignored build scripts` → 把 `@linxin666/dsh-client-ui-skin-stock`
+>   加入 `~/.dsh/profiles/web/pnpm-workspace.yaml` 的 `allowBuilds` 列表后重跑该命令
+> - `dsh plugin` 命令不存在 → DSH 版本过旧，升级至 **0.1.0-rc.6 或更新**
+> - 已安装过旧版本想更新 → `dsh plugin --profile web update @linxin666/dsh-client-ui-skin-stock`
+
+### 方式二：npm / pnpm 安装（发布后可用）
+
+插件发布到 npm 后（当前 E404 未发布），可走市场同类插件的 npm 渠道：
+
+```sh
+dsh plugin --profile web add @linxin666/dsh-client-ui-skin-stock
+```
+
+> 当前包未发布 npm，请优先使用方式一（GitHub 安装）或方式三（市场安装）。
+
+### 方式三：手动安装
+
+适合离线环境 / 二次开发调试。三步：
+
+**① 编辑 `~/.dsh/cordis.patch.yml`**（home 层补丁，只写这一处，勿在多层重复写同一 id）：
 
 ```yaml
-# 1. 编辑 ~/.dsh/cordis.patch.yml（home 层，只写这一处，勿在多层重复）
 - insert:
     - id: ui-skin-stock
       name: '@linxin666/dsh-client-ui-skin-stock'
 ```
 
+**② 把仓库复制到 profile 的 node_modules**：
+
 ```sh
-# 2. 克隆或复制本仓库到 profile 的 node_modules
 git clone https://github.com/linhut/dsh-stock-terminal.git \
   ~/.dsh/profiles/web/node_modules/@linxin666/dsh-client-ui-skin-stock
-
-# 3. 重启 dsh web（杀进程重新启动，或 Ctrl+C 后重跑启动命令）
-# 找到 dsh web 进程 (PID) 杀掉后重新启动，或 Ctrl+C 后重跑原启动命令
 ```
 
-### 方式三：通过插件市场安装（待收录）
+**③ 重启 dsh web**（见方式一的重启说明），刷新浏览器即可。
 
-本插件已提交 [dsh-market PR #160](https://github.com/dsh-market/dsh-market/pull/160)，合并后即可在 **设置 → 插件市场** 中搜索 `dsh-stock-terminal` 一键安装。
+### 方式四：插件市场一键安装（待收录）
+
+已提交 [dsh-market PR #160](https://github.com/dsh-market/dsh-market/pull/160)，
+合并后可在 **设置 → 插件市场** 搜索 `dsh-stock-terminal`，App Store 式一键安装、热启用。
 
 ### 安装后
 
-1. 刷新浏览器（`Ctrl+F5` 硬刷新清除缓存）
-2. 应看到股市主题的标题栏，底部状态栏出现「行情」按钮
-3. 点击「行情」打开面板 → 添加自选股开始使用
+1. **重启 dsh web**（杀进程重新启动，或 Ctrl+C 后重跑启动命令）
+2. **刷新浏览器**（`Ctrl+F5` 硬刷新清除缓存）
+3. 应看到股市主题的标题栏，底部状态栏出现「行情」按钮
+4. 点击「行情」打开面板 → 添加自选股开始使用
 
-> 卸载：`dsh plugin --profile web remove @linxin666/dsh-client-ui-skin-stock` + 重启；
-> 或删除 `~/.dsh/cordis.patch.yml` 中对应行 + 重启，**不影响 DSH 本体运行**。
+### 卸载
+
+```sh
+# CLI 方式装的（方式一/二）
+dsh plugin --profile web remove @linxin666/dsh-client-ui-skin-stock
+
+# 手动方式装的（方式三），删除 home 补丁行
+# 编辑 ~/.dsh/cordis.patch.yml，删掉 ui-skin-stock 那一块 insert，保存
+
+# 重启 dsh web 生效
+```
+
+> 卸载**不影响 DSH 本体运行**。宿主 apply 全部 try/catch 容错，模块零第三方依赖，坏也只影响自身功能。
+> 回退到旧版本：`dsh plugin --profile web install @linxin666/dsh-client-ui-skin-stock@<旧版本>` 或手动切换 git tag。
 
 ---
 
@@ -136,17 +184,20 @@ dsh-stock-terminal/
 
 ## ⚙️ 集成方式
 
-### 接线策略
+### 两种接线机制
 
-- **CLI 安装**（方式一）：`dsh plugin` 自动管理 profile 层的 bundle 注册，无需手动编辑补丁文件
-- **手动安装**（方式二）：home 层 `~/.dsh/cordis.patch.yml` 单行 insert
+| 方式 | 注册位置 | 适用场景 |
+|------|----------|----------|
+| **profile bundle**（CLI 安装自动） | `~/.dsh/profiles/web/package.json` → `dsh.profile.bundles` | 推荐；与 `dsh-web-ui-all`、`modlens` 同队列 |
+| **home patch**（手动安装） | `~/.dsh/cordis.patch.yml` → `insert` | 离线 / 二次开发 |
 
-### ⚠️ 重要
+### ⚠️ 重要注意事项
 
-- 切勿把同一 `insert` 同时写进 profile patch 与 home patch —— 两层叠加会产生重复 loader
-  entry id，触发 DSH fail-loud 启动保护
+- **切勿把同一 `insert` 同时写进 profile patch 与 home patch** —— 两层叠加会产生重复
+  loader entry id，触发 DSH fail-loud 启动保护（曾因此导致 web 无法启动）
 - 皮肤中心（dsh-client-ui-skin-center）可识别本皮肤（`skin.json` 位于
-  `node_modules/@linxin666/` 下）；切换皮肤时可能将本行视为 legacy 皮肤行移除，重加该行即可
+  `node_modules/@linxin666/` 下）；其切换皮肤时可能将本行视为 legacy 皮肤行移除，
+  重加该行即可（CLI 方式装的 bundle 不受此影响）
 - DSH 系统设置侧边栏出现独立「股市行情」分区 —— 可管理刷新间隔、自选列表、持仓信息，
   与面板内数据双向同步（同一份 localStorage 读写）
 
