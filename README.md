@@ -1,4 +1,4 @@
-﻿# 📈 dsh-stock-terminal · 股市行情皮肤 + 功能插件
+# 📈 dsh-stock-terminal · 股市行情皮肤 + 功能插件
 
 > **DSH Web GUI（DeepSeek Harness）行情皮肤与功能插件**：全局交易终端视觉 + 实时行情面板。
 > 自选跑马灯、首字母模糊搜索、持仓盈亏管理，A股 / 港股 / 美股 / 指数 / 加密 / 外汇一站式盯盘。
@@ -34,7 +34,7 @@
 
 ## 📦 安装
 
-本插件为 **DSH Web GUI 外部插件**，支持 CLI 一键安装、手动安装，也可通过插件市场（awesome-dsh-plugin 收录后）一键安装。
+本插件为 **DSH Web GUI 外部插件**，支持以下三种安装方式。
 
 ### 方式一：CLI 一键安装（推荐 ⭐）
 
@@ -55,27 +55,24 @@ Done in 8.3s using pnpm v11.22.0
 它自动做了三件事：
 
 1. **安装依赖** → 写入 `~/.dsh/profiles/web/package.json` 的 `dependencies`
-2. **注册 bundle** → 把 `@linxin666/dsh-client-ui-skin-stock` 追加进
-   `dsh.profile.bundles`（与 `dsh-web-ui-all`、`modlens` 同队列）
+2. **注册 bundle** → 把 `@linxin666/dsh-client-ui-skin-stock` 追加进 `dsh.profile.bundles`（与 `dsh-web-ui-all`、`modlens` 同队列）
 3. **文件就位** → `node_modules/@linxin666/dsh-client-ui-skin-stock/` 下 lib/skin.json/patch 齐全
 
 然后**重启 dsh web** 使 bundle 加载生效：
 
 ```sh
 # 找到当前 dsh web 进程 PID 杀掉后重新启动
-# （Windows：任务管理器 / netstat -ano | findstr 3080）
-node E:\npm-global\node_modules\@deepseek-ai\dsh\lib\bin.js web
+# 重启命令：node E:\npm-global\node_modules\@deepseek-ai\dsh\lib\bin.js web
 ```
 
 > **常见问题**
-> - 提示 `allowBuilds` / `Ignored build scripts` → 把 `@linxin666/dsh-client-ui-skin-stock`
->   加入 `~/.dsh/profiles/web/pnpm-workspace.yaml` 的 `allowBuilds` 列表后重跑该命令
+> - 提示 `allowBuilds` / `Ignored build scripts` → 把 `@linxin666/dsh-client-ui-skin-stock` 加入 `~/.dsh/profiles/web/pnpm-workspace.yaml` 的 `allowBuilds` 列表后重跑该命令
 > - `dsh plugin` 命令不存在 → DSH 版本过旧，升级至 **0.1.0-rc.6 或更新**
 > - 已安装过旧版本想更新 → `dsh plugin --profile web update @linxin666/dsh-client-ui-skin-stock`
 
 ### 方式二：手动安装
 
-适合离线环境 / 二次开发调试。三步：
+适合离线环境 / 二次开发调试：
 
 **① 编辑 `~/.dsh/cordis.patch.yml`**（home 层补丁，只写这一处，勿在多层重复写同一 id）：
 
@@ -94,15 +91,11 @@ git clone https://github.com/linhut/dsh-stock-terminal.git \
 
 **③ 重启 dsh web**（见方式一的重启说明），刷新浏览器即可。
 
-### 方式三：插件市场一键安装
+### 方式三：插件市场安装
 
-**机制说明**：DSH 官方插件市场（dsh-market）的目录来自
-[awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
-精选列表（线上 https://awesome-dsh-plugin.com/plugins.json 实时生成）。
-本插件已提交收录 [PR #1766](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766)，
-合并后（通常 1 天内）即可在 **设置 → 插件市场** 搜索 stock 一键安装。
+DSH 官方插件市场（dsh-market）的插件目录来自 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) 精选列表（线上 https://awesome-dsh-plugin.com/plugins.json 实时生成）。
 
-也可以使用自研的 [dsh-manager](https://github.com/linhut/dsh-manager) 插件市场安装。
+本插件已提交收录 [PR #1766](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766)，合并后（通常 1 天内）即可在 **设置 → 插件市场** 搜索 `stock` 一键安装。
 
 ### 安装后
 
@@ -139,8 +132,7 @@ dsh plugin --profile web remove @linxin666/dsh-client-ui-skin-stock
 | 大写组合 | `BTCUSDT` `ETHUSDT`… | 加密货币（24h） | Binance |
 | `AAA/BBB` | `USD/CNY` | 外汇（美元等基准） | Frankfurter |
 
-> 数据由**宿主端聚合代理**统一拉取（`/plugins/dsh-stock/api/quotes`，GBK 解码、超时降级），
-> 浏览器零 CORS；代理不可用时自动降级为浏览器直连。
+> 数据由**宿主端聚合代理**统一拉取（`/plugins/dsh-stock/api/quotes`，GBK 解码、超时降级），浏览器零 CORS；代理不可用时自动降级为浏览器直连。
 
 ---
 
@@ -152,9 +144,7 @@ dsh plugin --profile web remove @linxin666/dsh-client-ui-skin-stock
 - **代码**：`600519`、`000158`、`AAPL`、`BTC`…
 - **名称**：`茅台`、`苹果`、`比亚迪`…（中英文子串）
 
-内置 130+ 常用品种词典秒出结果；**词典未收录的品种自动走在线兜底**——
-宿主代理新浪股票建议 API（`/plugins/dsh-stock/api/suggest`，GBK 解码、300ms 防抖），
-任意 A股 / 港股 / 美股 / 指数输入代码、简称或拼音首字母即可联想。
+内置 130+ 常用品种词典秒出结果；**词典未收录的品种自动走在线兜底**——宿主代理新浪股票建议 API（`/plugins/dsh-stock/api/suggest`，GBK 解码、300ms 防抖），任意 A股 / 港股 / 美股 / 指数输入代码、简称或拼音首字母即可联想。
 
 键盘 ↑↓ 选择、Enter 添加、Esc 关闭。
 
@@ -188,13 +178,9 @@ dsh-stock-terminal/
 
 ### ⚠️ 重要注意事项
 
-- **切勿把同一 `insert` 同时写进 profile patch 与 home patch** —— 两层叠加会产生重复
-  loader entry id，触发 DSH fail-loud 启动保护（曾因此导致 web 无法启动）
-- 皮肤中心（dsh-client-ui-skin-center）可识别本皮肤（`skin.json` 位于
-  `node_modules/@linxin666/` 下）；其切换皮肤时可能将本行视为 legacy 皮肤行移除，
-  重加该行即可（CLI 方式装的 bundle 不受此影响）
-- DSH 系统设置侧边栏出现独立「股市行情」分区 —— 可管理刷新间隔、自选列表、持仓信息，
-  与面板内数据双向同步（同一份 localStorage 读写）
+- **切勿把同一 `insert` 同时写进 profile patch 与 home patch** —— 两层叠加会产生重复 loader entry id，触发 DSH fail-loud 启动保护（曾因此导致 web 无法启动）
+- 皮肤中心（dsh-client-ui-skin-center）可识别本皮肤（`skin.json` 位于 `node_modules/@linxin666/` 下）；其切换皮肤时可能将本行视为 legacy 皮肤行移除，重加该行即可（CLI 方式装的 bundle 不受此影响）
+- DSH 系统设置侧边栏出现独立「股市行情」分区 —— 可管理刷新间隔、自选列表、持仓信息，与面板内数据双向同步（同一份 localStorage 读写）
 
 ---
 
@@ -224,7 +210,7 @@ dsh-stock-terminal/
 ## 🧩 标签 / Topics
 
 `dsh-plugin` · `deepseek-harness` · `web-ui` · `skin` · `stock` · `行情` · `跑马灯` ·
-`自选股` · `持仓` · `K线` · `trading-terminal` · `ticker` · `longbridge-alternative`
+`自选股` · `持仓` · `K线` · `trading-terminal` · `ticker`
 
 ---
 
@@ -234,5 +220,4 @@ dsh-stock-terminal/
 
 ---
 
-*由 [linhut](https://github.com/linhut) 维护，已提交 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766) 收录。*
-*DSH 插件安装参考了 [dsh-market](https://github.com/dsh-market/dsh-market) 的 `dsh plugin` 命令模式。*
+*由 [linhut](https://github.com/linhut) 维护，已提交 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) 收录。*
