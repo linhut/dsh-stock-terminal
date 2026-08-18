@@ -66,8 +66,8 @@ dsh plugin --profile web add github:linhut/dsh-stock-terminal
 git clone https://github.com/linhut/dsh-stock-terminal.git \
   ~/.dsh/profiles/web/node_modules/@linxin666/dsh-client-ui-skin-stock
 
-# 3. 重启 dsh web
-dsh web restart
+# 3. 重启 dsh web（杀进程重新启动，或 Ctrl+C 后重跑启动命令）
+# 找到 dsh web 进程 (PID) 杀掉后重新启动，或 Ctrl+C 后重跑原启动命令
 ```
 
 ### 方式三：通过插件市场安装（待收录）
