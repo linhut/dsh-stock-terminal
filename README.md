@@ -73,17 +73,7 @@ node E:\npm-global\node_modules\@deepseek-ai\dsh\lib\bin.js web
 > - `dsh plugin` 命令不存在 → DSH 版本过旧，升级至 **0.1.0-rc.6 或更新**
 > - 已安装过旧版本想更新 → `dsh plugin --profile web update @linxin666/dsh-client-ui-skin-stock`
 
-### 方式二：npm / pnpm 安装（发布后可用）
-
-插件发布到 npm 后（当前 E404 未发布），可走市场同类插件的 npm 渠道：
-
-```sh
-dsh plugin --profile web add @linxin666/dsh-client-ui-skin-stock
-```
-
-> 当前包未发布 npm，请优先使用方式一（GitHub 安装）或方式三（市场安装）。
-
-### 方式三：手动安装
+### 方式二：手动安装
 
 适合离线环境 / 二次开发调试。三步：
 
@@ -104,7 +94,7 @@ git clone https://github.com/linhut/dsh-stock-terminal.git \
 
 **③ 重启 dsh web**（见方式一的重启说明），刷新浏览器即可。
 
-### 方式四：插件市场一键安装（待收录）
+### 方式三：插件市场一键安装（待收录）
 
 已提交 [dsh-market PR #160](https://github.com/dsh-market/dsh-market/pull/160)，
 合并后可在 **设置 → 插件市场** 搜索 `dsh-stock-terminal`，App Store 式一键安装、热启用。
@@ -119,10 +109,10 @@ git clone https://github.com/linhut/dsh-stock-terminal.git \
 ### 卸载
 
 ```sh
-# CLI 方式装的（方式一/二）
+# CLI 方式安装的
 dsh plugin --profile web remove @linxin666/dsh-client-ui-skin-stock
 
-# 手动方式装的（方式三），删除 home 补丁行
+# 手动方式安装的，删除 home 补丁行
 # 编辑 ~/.dsh/cordis.patch.yml，删掉 ui-skin-stock 那一块 insert，保存
 
 # 重启 dsh web 生效
