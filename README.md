@@ -3,6 +3,10 @@
 > **DSH Web GUI（DeepSeek Harness）行情皮肤与功能插件**：全局交易终端视觉 + 实时行情面板。
 > 自选跑马灯、首字母模糊搜索、持仓盈亏管理，A股 / 港股 / 美股 / 指数 / 加密 / 外汇一站式盯盘。
 
+<p align="center">
+  <img src="assets/screenshot.png" alt="dsh-stock-terminal 截图" width="100%">
+</p>
+
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-DSH%20Web%20GUI-4a5568.svg)](#安装)
 [![Version](https://img.shields.io/badge/version-0.1.0-orange.svg)](../../releases)
