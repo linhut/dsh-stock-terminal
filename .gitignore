@@ -12,5 +12,8 @@ tools/
 # 开发工作记忆
 .workbuddy/
 
+# AI 开发工作记忆
+.atomcode/
+
 # Windows
 Thumbs.db

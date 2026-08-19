@@ -76,3 +76,31 @@ Invoke-WebRequest 'http://127.0.0.1:3080/api/skin-center/state'
 
 冒烟测试要点（可复跑）：stub `@deepseek-ai/dsh-settings` 与 `schemastery` 后 import lib/index.js，
 假 ctx 注册路由，验证 大写前缀 200 / 非法符号 400 / 跨站 403 / POST 405 / suggest 缓存与真实拉取。
+
+## 2026-08-19 事故：npm install 中断导致 node_modules 大面积残缺
+
+### 根因
+`pnpm install` 被中断（此前 `@linxin666/dsh-client-ui-skin-stock` 已从 npm registry 下架，
+E404 错误导致 install 流程异常中断），profile web 的 node_modules 出现 105 个文件残缺包
+（@deepseek-ai 系列 47 个 + 其他 58 个），启动时逐个报 `ERR_MODULE_NOT_FOUND`。
+`--offline` 显示 "up to date" 但实际文件缺失，install 状态不可信。
+
+### 修复动作
+1. 从 `package.json` 移除已下架的 `@linxin666/dsh-client-ui-skin-stock`（报错源头）
+2. 补齐缺失的 `dsh-web-frontend`（从 npm registry 拉完整 tarball）
+3. 批量将 profile 下所有残缺包从全局 `E:\npm-global\node_modules\@deepseek-ai\dsh\node_modules` 完整副本覆盖
+
+### 经验沉淀（防再犯）
+| 原则 | 说明 |
+| --- | --- |
+| install 状态不可信 | `pnpm install --offline` 显示 "up to date" ≠ 文件完整 |
+| 快速校验法 | 对比 profile 与全局同名包的文件数（`Get-ChildItem -Recurse -File | Measure-Object`），少于全局即残缺 |
+| 修复法 | 从全局副本 `Copy-Item` 整体覆盖，比重新 install 更可靠更快 |
+| 独立安装脚本 | `tools/install-local.mjs` 绕过 npm registry，直接文件拷贝 + patch 写入，不触发 install |
+| 完整性工具 | `tools/repair-profile.mjs` 自动校验所有包的文件数，`--repair` 模式自动从全局修复 |
+
+### 验证命令
+```powershell
+node tools/repair-profile.mjs --profile ~/.dsh/profiles/web --list
+node tools/repair-profile.mjs --profile ~/.dsh/profiles/web --repair
+```

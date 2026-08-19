@@ -102,6 +102,36 @@ DSH 官方插件市场（dsh-market）的插件目录来自 [awesome-dsh-plugin]
 
 本插件已提交收录 [PR #1766](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766)，合并后（通常 1 天内）即可在 **设置 → 插件市场** 搜索 `stock` 一键安装。
 
+> ⚠️ **注意（2026-08-19）**：`@linxin666/dsh-client-ui-skin-stock` 已从 npm registry 下架（E404）。
+> **方式一 / 方式三 不再可用**（install 会失败并可能损坏依赖树）；请改用**方式四 本地安装**，或使用方式二手动安装。
+
+### 方式四：本地一键安装（推荐 ⭐ 2026-08-19 起）
+
+包已下架后，推荐使用仓库内置的本地安装脚本——**完全绕过 npm registry**，直接文件拷贝 + 写入 patch，绝不触发 install（避免上次事故的依赖树残缺问题）：
+
+```sh
+node tools/install-local.mjs
+```
+
+脚本自动完成：
+
+1. **校验源目录完整性**（lib/client.js / lib/index.js / skin.json / package.json 必须齐全）
+2. **拷贝文件**到 `~/.dsh/profiles/web/node_modules/@linxin666/dsh-client-ui-skin-stock/`
+3. **写入 patch**到 `~/.dsh/cordis.patch.yml`（幂等，重复运行不产生重复条目）
+4. **校验安装副本**：逐文件对比源目录与目标目录的文件名 + 字节数
+
+参数：
+
+```sh
+# 指定 profile
+node tools/install-local.mjs --profile C:\Users\xxx\.dsh\profiles\web
+
+# 卸载（删除文件与 patch 条目，保留浏览器本地数据）
+node tools/install-local.mjs --dispose
+```
+
+> 首次接线后需**重启 dsh web** 生效；之后更新文件无需重启（刷新浏览器即可）。
+
 ### 安装后
 
 1. **重启 dsh web**（杀进程重新启动，或 Ctrl+C 后重跑启动命令）
