@@ -7,7 +7,9 @@ dist/
 # 推广素材
 .promo/
 PROMO_VIDEO_WORKFLOW.md
-tools/
+tools/*
+!tools/install-local.mjs
+!tools/repair-profile.mjs
 
 # 开发工作记忆
 .workbuddy/
