@@ -1,3 +1,9 @@
+<!--
+(c) 2026 Jose AI (https://www.linhut.cn)
+https://github.com/linhut/dsh-stock-terminal
+Licensed under the MIT License. See the LICENSE file for details.
+-->
+
 # 上线记录 · dsh-stock-terminal（股市行情皮肤+功能插件）
 
 > 状态：**已上线本地运行**（2026-08-17），崩溃已修复，本体恢复正常。

@@ -1,3 +1,6 @@
+# (c) 2026 Jose AI (https://www.linhut.cn)
+# https://github.com/linhut/dsh-stock-terminal
+# Licensed under the MIT License. See the LICENSE file for details.
 # 股市行情终端 (dsh-stock-terminal) bundle patch:
 # 把本插件的 dsh.client 行插入 web 插件名册。宿主侧同理（同一个 entry 同时
 # 挂宿主路由与浏览器 bundle）。

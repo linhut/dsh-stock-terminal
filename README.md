@@ -1,3 +1,9 @@
+<!--
+(c) 2026 Jose AI (https://www.linhut.cn)
+https://github.com/linhut/dsh-stock-terminal
+Licensed under the MIT License. See the LICENSE file for details.
+-->
+
 # 📈 dsh-stock-terminal · 股市行情皮肤 + 功能插件
 
 > **DSH Web GUI（DeepSeek Harness）行情皮肤与功能插件**：全局交易终端视觉 + 实时行情面板。

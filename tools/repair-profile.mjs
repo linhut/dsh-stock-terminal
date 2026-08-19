@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// (c) 2026 Jose AI (https://www.linhut.cn)
+// https://github.com/linhut/dsh-stock-terminal
+// Licensed under the MIT License. See the LICENSE file for details.
+
 /**
  * repair-profile.mjs — 校验并修复 DSH profile node_modules 残缺。
  *

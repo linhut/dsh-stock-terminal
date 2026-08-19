@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// (c) 2026 Jose AI (https://www.linhut.cn)
+// https://github.com/linhut/dsh-stock-terminal
+// Licensed under the MIT License. See the LICENSE file for details.
+
 /**
  * install-local.mjs — 将 dsh-stock-terminal 本地安装到指定 DSH web profile。
  *
