@@ -1,4 +1,4 @@
-﻿# 📈 dsh-stock-terminal · 股市行情皮肤 + 功能插件
+# 📈 dsh-stock-terminal · 股市行情皮肤 + 功能插件
 
 > **DSH Web GUI（DeepSeek Harness）行情皮肤与功能插件**：全局交易终端视觉 + 实时行情面板。
 > 自选跑马灯、首字母模糊搜索、持仓盈亏管理，A股 / 港股 / 美股 / 指数 / 加密 / 外汇一站式盯盘。
@@ -9,7 +9,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-DSH%20Web%20GUI-4a5568.svg)](#安装)
-[![Version](https://img.shields.io/badge/version-1.2.0-orange.svg)](./package.json)
+[![Version](https://img.shields.io/badge/version-1.3.0-orange.svg)](./package.json)
 [![awesome-dsh-plugin](https://img.shields.io/badge/awesome--dsh--plugin-PR%20%231766-8b5cf6)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766)
 
 ---
@@ -23,6 +23,7 @@
 | 📈 **个股 K 线弹窗** | 日K / 周K / 月K 一键切换；**鼠标滚轮缩放**（锚点缩放，20~200 根）+ **拖拽平移**查看历史/近期；**十字光标**（hover 竖线+横线 + OHLC 浮层 + 价格轴/日期轴联动标注）；蜡烛图 + MA5/MA10 均线 + 成交量幅图 + 价格/日期轴 + 网格 + 区间涨跌统计；Esc/遮罩/✕ 关闭；窗口 resize 自适应重绘；A股/港股/指数走腾讯前复权，美股腾讯不足时回退 Yahoo，加密货币走 Binance；服务端 60s 缓存 + 在途去重 |
 | 🧭 **自选列表** | 增删 / ↑↓ 排序 / 移除；**拼音首字母 + 代码 + 名称模糊搜索联想**（如 `gzmt` → 贵州茅台、`600519`、`茅台`），内置 130+ 品种词典 + 在线 API 兜底，键盘 ↑↓ Enter Esc 操作 |
 | 💼 **持仓管理** | 模糊搜索添加持仓（与自选同款联想体验）；代码 + 数量 + 成本价 → 现价 / 市值 / 浮动盈亏 / 盈亏率，底部汇总总市值 / 总盈亏 / 总盈亏率；编辑 / 删除持仓 |
+| 🔔 **持仓盯盘提醒** | 每个持仓可设「盯盘高价 / 盯盘低价」（≥高价触发涨提醒、≤低价触发跌提醒），一次预警后标记已触发可手动重置重新武装；持仓行🔔快捷设置 + 表单字段双入口；状态栏实时显示激活盯盘数；触发时页面 Toast + 浏览器桌面通知（Notification API）双重提醒，首次设置时自动请求授权 |
 | 🏷 **标题栏持仓摘要** | 持仓个股名称 + 涨跌幅按标题栏宽度自适应显示，超宽时自动收起为「等 N 只」+ 总盈亏芯片；窗口 resize 重新适配 |
 | 📏 **伸缩条** | 拖动面板顶部伸缩条调整面板高度（替代 CSS resize 右下角把手），高度持久化到 localStorage |
 | ⏱ **交易时段** | 状态栏实时显示 A股 / 港股 / 美股 盘中·午休·盘前·休市，每分钟自动刷新（`Intl.DateTimeFormat` 按 Asia/Shanghai、Asia/Hong_Kong、America/New_York 判定） |
