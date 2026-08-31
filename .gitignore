@@ -13,6 +13,7 @@ PROMO_VIDEO_WORKFLOW.md
 tools/*
 !tools/install-local.mjs
 !tools/repair-profile.mjs
+!tools/check-dsh-compliance.mjs
 
 # 开发工作记忆
 .workbuddy/

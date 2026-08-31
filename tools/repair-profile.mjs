@@ -36,8 +36,7 @@ const arg = (name, fallback) => {
 const PROFILE = resolve(arg("--profile", join(homedir(), ".dsh", "profiles", "web")));
 const REPAIR = args.includes("--repair");
 const LIST = args.includes("--list");
-// 全局完整副本：dsh 自身 node_modules（本次修复的成功来源）
-const GLOBAL = process.env.DSH_GLOBAL || join(process.env.APPDATA ? process.cwd() : "", "");
+// 全局完整副本：dsh 自身 node_modules（本次修复的成功来源），见下方 candidates
 
 function g(s) { return "\x1b[32m" + s + "\x1b[0m"; }
 function r(s) { return "\x1b[31m" + s + "\x1b[0m"; }
@@ -63,6 +62,8 @@ function fileCount(dir) {
 function main() {
 	// 定位全局副本
 	const candidates = [
+		// 显式指定（最高优先级，对应报错提示中的 DSH_GLOBAL）
+		process.env.DSH_GLOBAL,
 		// E: 盘全局安装（npm-global 目录）
 		"E:/npm-global/node_modules/@deepseek-ai/dsh/node_modules",
 		"E:/npm-global/node_modules",

@@ -1,6 +1,6 @@
 {
   "name": "@linxin666/dsh-client-ui-skin-stock",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "股市行情皮肤+功能插件：从 Trading Terminal 皮肤演进而来的自选跑马灯、实时行情、自选列表与持仓盈亏面板，点击跑马灯弹出个股日K图（蜡烛/MA/成交量）（A股/港股/美股/指数/加密/外汇，腾讯+Binance+Yahoo+Frankfurter 聚合）",
   "author": "Jose AI (https://www.linhut.cn)",
   "type": "module",
@@ -20,6 +20,12 @@
     }
   },
   "license": "Apache-2.0",
+  "dependencies": {
+    "schemastery": "^3.18.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-settings": ">=0.0.1-rc.1 <0.1.0 || >=0.1.0-rc.1 <0.2.0-0"
+  },
   "keywords": [
     "dsh-plugin",
     "dsh",
@@ -39,7 +45,8 @@
   "files": [
     "lib",
     "skin.json",
-    "cordis.patch.yml"
+    "cordis.patch.yml",
+    "screenshots.json"
   ],
   "scripts": {
     "build": "echo 本插件为手写无构建产物；直接发布 lib/ 即可"

@@ -15,7 +15,7 @@ Licensed under the MIT License. See the LICENSE file for details.
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-DSH%20Web%20GUI-4a5568.svg)](#安装)
-[![Version](https://img.shields.io/badge/version-1.3.0-orange.svg)](./package.json)
+[![Version](https://img.shields.io/badge/version-1.4.0-orange.svg)](./package.json)
 [![awesome-dsh-plugin](https://img.shields.io/badge/awesome--dsh--plugin-PR%20%231766-8b5cf6)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766)
 
 ---
@@ -203,6 +203,11 @@ dsh-stock-terminal/
 ├── cordis.patch.yml  # 插件接线
 ├── assets/
 │   └── screenshot.png
+├── screenshots.json   # dsh-market 截图声明（指向 assets/screenshot.png）
+├── tools/
+│   ├── install-local.mjs            # 本地一键安装（绕过 npm registry）
+│   ├── repair-profile.mjs           # 校验并修复 profile node_modules 残缺
+│   └── check-dsh-compliance.mjs     # DSH 规范合规检查（见下方「合规检查」）
 └── README.md
 ```
 
@@ -245,6 +250,36 @@ dsh-stock-terminal/
 - **故障降级提示**：全部数据源失败时 toast 一次性提示并自动重试；代理失败自动降级浏览器直连
 - **设置双向即时生效**：系统设置卡修改刷新间隔/跑马灯后，面板轮询与跑马灯立即重排（自定义事件同步）
 - **K 线周期自适应**：服务端原生支持 day/week/month（腾讯 fqkline / Binance / Yahoo）；客户端聚合 fallback 确保不重启也能用
+- **DSH 规范合规**：官方 `@deepseek-ai/*` 依赖声明为 peerDependencies（带显式预发布分支），皮肤元数据与 bundle 接线一致（skin.json `bundleWired: true`），文本文件一律 UTF-8 无 BOM（显式 `readFileSync(path, "utf8")`，规避 Windows 默认 GBK 解码乱码）
+
+---
+
+## ✅ 合规检查
+
+按最新 DSH 要求与规则（awesome-dsh-plugin 收录审核 + DeepSeek Harness 官方文档 + skin-center 接线规则）自动校验插件元数据与内部逻辑：
+
+```sh
+node tools/check-dsh-compliance.mjs            # 只读检查（dry run）
+node tools/check-dsh-compliance.mjs --fix      # 自动修复可修复项
+node tools/check-dsh-compliance.mjs --quiet    # 只输出 FAIL
+```
+
+检查项（13 项，逐项独立上报，失败退出码 1）：
+
+| 检查项 | 依据 |
+| --- | --- |
+| `pkg.manifest` / `pkg.bundle-patch-exists` | `dsh.bundle.patch` 必须声明且指向存在的文件（只声明 `dsh.client` 不可安装） |
+| `pkg.client` | 带 UI 时 `platform` 应为 `web` |
+| `pkg.peer-deps:*` | 官方 `@deepseek-ai/*` 用 peerDependencies 且范围带显式预发布分支 |
+| `pkg.imports` | 静态扫描 lib/*.js 的 import，未声明依赖会被报出 |
+| `patch.format` / `patch.unique-id` | cordis.patch.yml 结构与 id 规范（`ui-skin-*`）、无重复 id |
+| `skin.json.meta` / `skin.bundleWired` | id/package/wiring.id 正则（skin-center 规则）与 bundle 接线一致性 |
+| `screenshots.json` | 市场截图声明：1-8 张、相对路径不出目录 |
+| `encoding.utf8-no-bom` | 文本文件（含 SKILL.md 若存在）必须 UTF-8 无 BOM |
+| `sync.symbol-rules` | 前后端符号分类/规范化规则一致（公共约定两侧同源） |
+| `input.key-trim` | suggest key 校验 min/max 基于同一 trim 后的值 |
+
+> 各脚本读取文件一律显式 `utf8`，不依赖 Windows 默认编码；检查工具用 fatal 模式 `TextDecoder` 校验 UTF-8 合法性，防止 GBK 解码乱码导致误判。
 
 ---
 

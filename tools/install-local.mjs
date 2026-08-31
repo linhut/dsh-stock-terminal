@@ -73,20 +73,32 @@ function checkSource() {
 	}
 }
 
-function compareDirs(label, a, b) {
-	const filesA = walk(a);
-	const filesB = existsSync(b) ? walk(b) : [];
-	const mapB = new Map(filesB.map((f) => [f.rel, f.size]));
+/** 只比较实际拷贝清单，避免把 README/tools/assets 等未拷贝文件误报为缺失。 */
+function compareCopy(label, srcRoot, destRoot, relEntries) {
+	const mapA = new Map(), mapB = new Map();
+	const addAll = (map, root) => {
+		for (const rel of relEntries) {
+			const p = join(root, rel);
+			if (!existsSync(p)) continue;
+			if (statSync(p).isDirectory()) {
+				for (const f of walk(p)) map.set(rel + "/" + f.rel, f.size);
+			} else {
+				map.set(rel, statSync(p).size);
+			}
+		}
+	};
+	addAll(mapA, srcRoot);
+	addAll(mapB, destRoot);
 	let missing = 0, mismatch = 0;
-	for (const f of filesA) {
-		const bf = mapB.get(f.rel);
+	for (const [rel, size] of mapA) {
+		const bf = mapB.get(rel);
 		if (bf === undefined) missing++;
-		else if (bf !== f.size) mismatch++;
+		else if (bf !== size) mismatch++;
 	}
 	const same = missing === 0 && mismatch === 0;
 	console.log(
 		(same ? g("[OK]") : r("[差异]")) +
-		" " + label + ": 源 " + filesA.length + " 个 / 目标 " + filesB.length +
+		" " + label + ": 源 " + mapA.size + " 个 / 目标 " + mapB.size +
 		(missing > 0 ? "，缺 " + missing : "") + (mismatch > 0 ? "，大小不符 " + mismatch : "")
 	);
 	return same;
@@ -136,10 +148,10 @@ function dispose() {
 }
 
 function main() {
+	const COPY_ITEMS = ["lib", "skin.json", "package.json", "cordis.patch.yml"];
 	if (DISPOSE) { dispose(); return; }
 	checkSource();
 	if (existsSync(DEST)) {
-		const COPY_ITEMS = ["lib", "skin.json", "package.json", "cordis.patch.yml"];
 		const allMatch = COPY_ITEMS.every((n) => existsSync(join(DEST, n)));
 		if (allMatch) {
 			console.log(y("[跳过] 已有安装完整"));
@@ -150,11 +162,11 @@ function main() {
 		console.log(y("[更新] 检测到安装不完整，重新拷贝"));
 	}
 	mkdirSync(DEST, { recursive: true });
-	for (const name of ["lib", "skin.json", "package.json", "cordis.patch.yml"]) {
+	for (const name of COPY_ITEMS) {
 		const src = join(SRC, name);
 		if (existsSync(src)) cpSync(src, join(DEST, name), { recursive: true, force: true });
 	}
-	compareDirs("安装副本", SRC, DEST);
+	compareCopy("安装副本", SRC, DEST, COPY_ITEMS);
 	patchInsert();
 	console.log(g("[完成] 本地安装成功\n重启 dsh web 后刷新浏览器"));
 }

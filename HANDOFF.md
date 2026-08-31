@@ -7,6 +7,7 @@ Licensed under the MIT License. See the LICENSE file for details.
 # 上线记录 · dsh-stock-terminal（股市行情皮肤+功能插件）
 
 > 状态：**已上线本地运行**（2026-08-17），崩溃已修复，本体恢复正常。
+> **v1.4.0（2026-08-31）**：新增 DSH 规范合规检查工具（tools/check-dsh-compliance.mjs，13 项检查 + --fix），按最新 awesome-dsh-plugin 收录规则与 DSH 官方文档修复元数据（peerDependencies 显式预发布分支、skin.json bundleWired、screenshots.json）、统一前后端符号校验、修复 install-local/repair-profile 工具 bug，文本文件统一 UTF-8 无 BOM。
 > **v0.2.0（2026-08-18）**：可靠性强化一轮，详见文末「可靠性强化记录」。
 > **v0.3.0（2026-08-18）**：点击跑马灯弹出个股日K图（蜡烛/MA5/MA10/成交量），
 > 新增宿主 `/api/kline` 路由（腾讯 fqkline 日K，美股回退 Yahoo，加密走 Binance klines，
