@@ -21,5 +21,8 @@ tools/*
 # AI 开发工作记忆
 .atomcode/
 
+# 内部上线/事故记录（不随仓库同步）
+HANDOFF.md
+
 # Windows
 Thumbs.db
