@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // (c) 2026 Jose AI (https://www.linhut.cn)
 // https://github.com/linhut/dsh-stock-terminal
-// Licensed under the MIT License. See the LICENSE file for details.
+// Licensed under the Apache License, Version 2.0. See the LICENSE file for details.
 
 /**
  * check-dsh-compliance.mjs — DSH 插件规范合规检查（按最新 DSH 要求与规则）。

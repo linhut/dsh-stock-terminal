@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // (c) 2026 Jose AI (https://www.linhut.cn)
 // https://github.com/linhut/dsh-stock-terminal
-// Licensed under the MIT License. See the LICENSE file for details.
+// Licensed under the Apache License, Version 2.0. See the LICENSE file for details.
 
 /**
  * repair-profile.mjs — 校验并修复 DSH profile node_modules 残缺。
@@ -64,9 +64,9 @@ function main() {
 	const candidates = [
 		// 显式指定（最高优先级，对应报错提示中的 DSH_GLOBAL）
 		process.env.DSH_GLOBAL,
-		// E: 盘全局安装（npm-global 目录）
-		"E:/npm-global/node_modules/@deepseek-ai/dsh/node_modules",
-		"E:/npm-global/node_modules",
+		// 用户主目录下的全局 npm 安装（npm-global 目录）
+		join(homedir(), "npm-global", "node_modules", "@deepseek-ai", "dsh", "node_modules"),
+		join(homedir(), "npm-global", "node_modules"),
 		// 备用：从 APPDATA 向上回溯
 		process.env.APPDATA ? join(process.env.APPDATA, "..", "..", "npm-global", "node_modules", "@deepseek-ai", "dsh", "node_modules") : "",
 		process.env.APPDATA ? join(process.env.APPDATA, "..", "..", "npm-global", "node_modules") : "",

@@ -1,7 +1,7 @@
 <!--
 (c) 2026 Jose AI (https://www.linhut.cn)
 https://github.com/linhut/dsh-stock-terminal
-Licensed under the MIT License. See the LICENSE file for details.
+Licensed under the Apache License, Version 2.0. See the LICENSE file for details.
 -->
 
 # 上线记录 · dsh-stock-terminal（股市行情皮肤+功能插件）

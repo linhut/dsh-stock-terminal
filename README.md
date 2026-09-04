@@ -1,7 +1,7 @@
 <!--
 (c) 2026 Jose AI (https://www.linhut.cn)
 https://github.com/linhut/dsh-stock-terminal
-Licensed under the MIT License. See the LICENSE file for details.
+Licensed under the Apache License, Version 2.0. See the LICENSE file for details.
 -->
 
 # 📈 dsh-stock-terminal · 股市行情皮肤 + 功能插件
@@ -73,7 +73,7 @@ Done in 8.3s using pnpm v11.22.0
 
 ```sh
 # 找到当前 dsh web 进程 PID 杀掉后重新启动
-# 重启命令：node E:\npm-global\node_modules\@deepseek-ai\dsh\lib\bin.js web
+# 重启：dsh web（或 node <DSH 安装目录>/lib/bin.js web）
 ```
 
 > **常见问题**
