@@ -14,6 +14,7 @@ tools/*
 !tools/install-local.mjs
 !tools/repair-profile.mjs
 !tools/check-dsh-compliance.mjs
+!tools/verify-pack.mjs
 
 # 开发工作记忆
 .workbuddy/

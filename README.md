@@ -15,7 +15,8 @@ Licensed under the MIT License. See the LICENSE file for details.
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-DSH%20Web%20GUI-4a5568.svg)](#安装)
-[![Version](https://img.shields.io/badge/version-1.4.0-orange.svg)](./package.json)
+[![Version](https://img.shields.io/badge/version-1.5.0-orange.svg)](./package.json)
+[![CI](https://github.com/linhut/dsh-stock-terminal/actions/workflows/ci.yml/badge.svg)](https://github.com/linhut/dsh-stock-terminal/actions/workflows/ci.yml)
 [![awesome-dsh-plugin](https://img.shields.io/badge/awesome--dsh--plugin-PR%20%231766-8b5cf6)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/1766)
 
 ---
@@ -121,8 +122,8 @@ node tools/install-local.mjs
 
 脚本自动完成：
 
-1. **校验源目录完整性**（lib/client.js / lib/index.js / skin.json / package.json 必须齐全）
-2. **拷贝文件**到 `~/.dsh/profiles/web/node_modules/@linxin666/dsh-client-ui-skin-stock/`
+1. **校验源目录完整性**（lib/client.js / lib/index.js / skin.json / package.json / screenshots.json / assets/screenshot.png 必须齐全）
+2. **拷贝文件**（lib / skin.json / package.json / cordis.patch.yml / screenshots.json / assets）到 `~/.dsh/profiles/web/node_modules/@linxin666/dsh-client-ui-skin-stock/`
 3. **写入 patch**到 `~/.dsh/cordis.patch.yml`（幂等，重复运行不产生重复条目）
 4. **校验安装副本**：逐文件对比源目录与目标目录的文件名 + 字节数
 
@@ -207,7 +208,13 @@ dsh-stock-terminal/
 ├── tools/
 │   ├── install-local.mjs            # 本地一键安装（绕过 npm registry）
 │   ├── repair-profile.mjs           # 校验并修复 profile node_modules 残缺
-│   └── check-dsh-compliance.mjs     # DSH 规范合规检查（见下方「合规检查」）
+│   ├── check-dsh-compliance.mjs     # DSH 规范合规检查（见下方「合规检查」）
+│   └── verify-pack.mjs              # prepare/verify 产物自检（语法 + 白名单）
+├── tests/
+│   ├── plugin.test.js               # 宿主端：真实 apply → 注册路由 → 执行 handler → 断言
+│   └── client.test.js               # 浏览器端：ModuleLoader 形态 + 防 XSS 基线
+├── .github/workflows/ci.yml         # CI：合规 + 自检 + 单测 + pack dry-run
+├── CHANGELOG.md                      # 版本变更记录（Keep a Changelog 格式）
 └── README.md
 ```
 
@@ -235,7 +242,7 @@ dsh-stock-terminal/
 - 红涨绿跌配色：up `#e02e3d` / dark `#f23645`，down `#089981`，平灰；深色主题整套 CSS 变量切换
 - `Intl.DateTimeFormat` 按 Asia/Shanghai、Asia/Hong_Kong、America/New_York 实时判定交易时段
 - 数据轮询 30s（可调 15/30/60s），`ctx.effect` 一次性收回所有 DOM / 定时器
-- 客户端形态：`window.__ModuleLoader__.load({ id, factory })`，`exports.apply` + `exports.inject`
+- 客户端形态：`window.__ModuleLoader__.load({ id, factory })`，`exports.apply` + `exports.inject`（`slots` / `settingsScope`），设置卡走 `slots.inject("settings.section")`
 - Canvas 蜡烛图绘制：日K/周K/月K 自适应、MA5/MA10 均线、成交量幅图、网格+价格+日期轴
 
 ---
@@ -250,34 +257,51 @@ dsh-stock-terminal/
 - **故障降级提示**：全部数据源失败时 toast 一次性提示并自动重试；代理失败自动降级浏览器直连
 - **设置双向即时生效**：系统设置卡修改刷新间隔/跑马灯后，面板轮询与跑马灯立即重排（自定义事件同步）
 - **K 线周期自适应**：服务端原生支持 day/week/month（腾讯 fqkline / Binance / Yahoo）；客户端聚合 fallback 确保不重启也能用
-- **DSH 规范合规**：官方 `@deepseek-ai/*` 依赖声明为 peerDependencies（带显式预发布分支），皮肤元数据与 bundle 接线一致（skin.json `bundleWired: true`），文本文件一律 UTF-8 无 BOM（显式 `readFileSync(path, "utf8")`，规避 Windows 默认 GBK 解码乱码）
+- **最新 DSH API 兼容**：服务器设置接入采用 `ctx.inject(["settings"])` + `ctx.settings.installSection`（dsh-settings ≥ 0.1.0-rc.x 官方新 API，已移除的 `installSettingsSection`/`settingsNamespace` 不再使用）；客户端设置卡走 `slots` + `settingsScope` 服务，两侧均为当前官方接线
+- **DSH 规范合规**：官方 harness 运行时包按规则声明（`@deepseek-ai/schemastery` 进 dependencies、客户端 react 进 peerDependencies），皮肤元数据与 bundle 接线一致（skin.json `bundleWired: true`），文本文件一律 UTF-8 无 BOM（显式 `readFileSync(path, "utf8")`，规避 Windows 默认 GBK 解码乱码）
+- **防御式边界**：quotes 最多 200 个符号、kline count 20–320、suggest key 1–50、分时点数上限 480；全部路由同源护栏（跨站 403）+ 8s 超时 + 失败独立降级
 
 ---
 
 ## ✅ 合规检查
 
-按最新 DSH 要求与规则（awesome-dsh-plugin 收录审核 + DeepSeek Harness 官方文档 + skin-center 接线规则）自动校验插件元数据与内部逻辑：
+按最新 DSH 要求与规则（awesome-dsh-plugin 收录审核 Checklist + DeepSeek Harness 官方文档 + skin-center 接线规则）自动校验插件元数据与内部逻辑：
 
 ```sh
-node tools/check-dsh-compliance.mjs            # 只读检查（dry run）
+npm run check:compliance               # 等价 node tools/check-dsh-compliance.mjs
 node tools/check-dsh-compliance.mjs --fix      # 自动修复可修复项
 node tools/check-dsh-compliance.mjs --quiet    # 只输出 FAIL
 ```
 
-检查项（13 项，逐项独立上报，失败退出码 1）：
+检查项（21 项，逐项独立上报，失败退出码 1）：
 
 | 检查项 | 依据 |
 | --- | --- |
 | `pkg.manifest` / `pkg.bundle-patch-exists` | `dsh.bundle.patch` 必须声明且指向存在的文件（只声明 `dsh.client` 不可安装） |
 | `pkg.client` | 带 UI 时 `platform` 应为 `web` |
-| `pkg.peer-deps:*` | 官方 `@deepseek-ai/*` 用 peerDependencies 且范围带显式预发布分支 |
-| `pkg.imports` | 静态扫描 lib/*.js 的 import，未声明依赖会被报出 |
+| `pkg.imports` | 静态扫描 lib/*.js 的 import/require（react 子路径归并），未声明依赖会被报出 |
+| `pkg.peer-deps:harness` | 官方 harness 运行时包（`@deepseek-ai/dsh-*`）必须 peerDependencies 且范围带显式预发布分支 |
+| `pkg.peer-deps:react` | 客户端 bundle `require("react")` → peerDependencies 须声明 react（skin-center 约定） |
+| `pkg.client-inject` | 客户端 `exports.inject` 服务（slots/settingsScope）与 `dsh.client.inject` 提供方 bundle 两侧一致 |
+| `pkg.prepare` | prepare 脚本存在（git 源安装不构建 → 必须有自检；本仓库为 `verify-pack.mjs`） |
+| `pkg.files-cover-screenshots` | files 白名单覆盖 screenshots.json 引用（发布包自洽） |
+| `pkg.settings-api-current` | 服务器 settings 必须用 `ctx.inject(["settings"])` + `installSection`（旧 API 已移除） |
+| `pkg.config-schema` | 服务器导出 `export const Config`（cordis.yml 组合配置入口） |
 | `patch.format` / `patch.unique-id` | cordis.patch.yml 结构与 id 规范（`ui-skin-*`）、无重复 id |
 | `skin.json.meta` / `skin.bundleWired` | id/package/wiring.id 正则（skin-center 规则）与 bundle 接线一致性 |
 | `screenshots.json` | 市场截图声明：1-8 张、相对路径不出目录 |
 | `encoding.utf8-no-bom` | 文本文件（含 SKILL.md 若存在）必须 UTF-8 无 BOM |
 | `sync.symbol-rules` | 前后端符号分类/规范化规则一致（公共约定两侧同源） |
 | `input.key-trim` | suggest key 校验 min/max 基于同一 trim 后的值 |
+| `input.minute-symbol` | minute 路由与 kline 一致校验 `classifySymbol`（防御式公共约定） |
+| `ci.present` | `.github/workflows` CI 存在（收录 Checklist：CI 证明真实可调用） |
+
+### 自检与测试
+
+```sh
+npm run verify        # 产物自检（prepare 等价）：必备文件 + JSON 可解析 + node --check 语法 + 白名单自洽
+npm test              # node --test：宿主端 apply→路由→handler 断言 + 客户端形态/防 XSS 基线
+```
 
 > 各脚本读取文件一律显式 `utf8`，不依赖 Windows 默认编码；检查工具用 fatal 模式 `TextDecoder` 校验 UTF-8 合法性，防止 GBK 解码乱码导致误判。
 

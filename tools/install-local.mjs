@@ -42,7 +42,7 @@ const PKG_ID = "@linxin666/dsh-client-ui-skin-stock";
 const ENTRY_ID = "ui-skin-stock";
 const DEST = join(PROFILE, "node_modules", ...PKG_ID.split("/"));
 const HOME_PATCH = join(homedir(), ".dsh", "cordis.patch.yml");
-const REQUIRED = ["lib/client.js", "lib/index.js", "skin.json", "package.json"];
+const REQUIRED = ["lib/client.js", "lib/index.js", "skin.json", "package.json", "screenshots.json", "assets/screenshot.png"];
 
 function g(s) { return "\x1b[32m" + s + "\x1b[0m"; }
 function r(s) { return "\x1b[31m" + s + "\x1b[0m"; }
@@ -148,7 +148,7 @@ function dispose() {
 }
 
 function main() {
-	const COPY_ITEMS = ["lib", "skin.json", "package.json", "cordis.patch.yml"];
+	const COPY_ITEMS = ["lib", "skin.json", "package.json", "cordis.patch.yml", "screenshots.json", "assets"];
 	if (DISPOSE) { dispose(); return; }
 	checkSource();
 	if (existsSync(DEST)) {

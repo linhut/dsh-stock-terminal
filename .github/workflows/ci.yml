@@ -1,0 +1,67 @@
+# (c) 2026 Jose AI (https://www.linhut.cn)
+# https://github.com/linhut/dsh-stock-terminal
+# Licensed under the MIT License. See the LICENSE file for details.
+
+# CI — 证明插件「真实可调用」（awesome-dsh-plugin 维护者 Checklist）：
+#   1. 合规检查（check:compliance，21 项）
+#   2. 产物自检（verify，含 node --check 语法 + files 白名单自洽）
+#   3. 单元测试（node --test：真实 apply → 注册路由 → 执行 handler → 断言）
+#   4. 打包 dry-run：确认发布 tarball 包含 lib/ 与皮肤元数据
+
+name: ci
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Compliance check (21 items)
+        run: npm run check:compliance
+
+      - name: Verify package (prepare-equivalent)
+        run: npm run verify
+
+      - name: Unit tests (real apply -> register -> handler -> assert)
+        run: npm test
+
+      - name: Pack dry-run (files whitelist self-consistency)
+        run: |
+          npm pack --dry-run --json > pack.json
+          node -e "
+            const fs = require('node:fs');
+            const json = JSON.parse(fs.readFileSync('pack.json', 'utf8'));
+            const files = json[0].files.map((f) => f.path);
+            const required = [
+              'lib/index.js',
+              'lib/client.js',
+              'skin.json',
+              'cordis.patch.yml',
+              'screenshots.json',
+              'assets/screenshot.png',
+              'package.json'
+            ];
+            const missing = required.filter((p) => !files.includes(p));
+            if (missing.length) {
+              console.error('tarball missing:', missing.join(', '));
+              process.exit(1);
+            }
+            console.log('tarball contains all required files (' + files.length + ' entries)');
+          "
