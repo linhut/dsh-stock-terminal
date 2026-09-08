@@ -5,6 +5,38 @@
 
 ## [Unreleased]
 
+## [v1.6.0] - 2026-09-08
+
+### 🔧 宿主 1.3（0.1.3-alpha.2）API 适配核对整改（核心）
+
+针对官方最新版本（npm dist-tag `alpha` = 0.1.3-alpha.2，即"1.3"）逐项核对插件 API 与宿主契约，
+发现并修复 3 处残留旧 API / 声明问题（此前 v1.5.0 整改未覆盖客户端侧）：
+
+- 客户端读回系统设置改用 `settingsScope` 的 `getSnapshot()`（宿主 `SettingsScope` 只有
+  `getSnapshot()/set()/unset()/mutate()/subscribe()`，**无 `get(field)`**；旧 `get()` 被 try/catch 吞掉
+  导致设置卡永远读不回已保存的刷新间隔/跑马灯开关）
+- 状态栏"工作区"计数从旧 `connection.api.workspace.list()` 迁移到新 `ctx.remote.session.list()`
+  （`ConnectionHandle` 无 `.api`；`workspace` remote 已移除 `list`，替代为 session 域）；
+  `exports.inject` 同步声明 `remote` 服务
+- `dsh.client.inject` 移除已停更的 `@deepseek-ai/dsh-client-runtime`（npm 最高 0.1.1-rc.2，
+  1.3 不再提供该平台模块），补上 `@deepseek-ai/dsh-api-remotes`（`remote` 服务提供方，
+  两侧一致检查通过）
+
+### ✅ 合规与工程化
+
+- `cordis.patch.yml` 的 insert `id` 还原为短标识 `ui-skin-stock`（与 skin.json `wiring.id`、
+  install-local.mjs `ENTRY_ID` 一致；官方 patch 约定 id 是短加载器标识、name 才是包名），
+  修复 `patch.format` 自检 FAIL
+- 合规检查映射表补充 `remote → @deepseek-ai/dsh-api-remotes`；客户端测试断言同步
+- 全面验证：`node tools/verify-pack.mjs`（产物/语法/白名单）+ `node tools/check-dsh-compliance.mjs`
+  （21 项全绿）+ `node --test`（形态与宿主端用例）
+
+### 📦 安装/升级
+
+- 本地升级：`node tools/install-local.mjs`（推荐；npm registry 已下架该包，E404，不支持 npm 安装）
+- CLI 升级（若已通过 git 源安装）：`dsh plugin --profile web update @linxin666/dsh-client-ui-skin-stock`
+- 支持 DSH：**0.1.2-rc.1 及以上（含 0.1.3-alpha.2）**（建议跟随 DSH 官方最新 rc 版本）
+
 ## [v1.5.0] - 2026-09-06
 
 ### 🔧 面向 DSH 新版本的兼容性整改（核心）

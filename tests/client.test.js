@@ -22,7 +22,7 @@ test("客户端 bundle 采用官方 ModuleLoader 形态", () => {
 });
 
 test("客户端声明需要的 cordis 服务（exports.inject 两侧一致）", () => {
-	assert.match(clientSrc, /exports\.inject\s*=\s*\["slots",\s*"settingsScope"\]/);
+	assert.match(clientSrc, /exports\.inject\s*=\s*\["slots",\s*"settingsScope",\s*"remote"\]/);
 });
 
 test("客户端应用入口存在（exports.apply）", () => {

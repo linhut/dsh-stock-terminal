@@ -52,7 +52,8 @@ const HARNESS_PEER_ONLY = /^@deepseek-ai\/dsh-/;
 // 客户端服务 → 提供方 bundle（client exports.inject 与 dsh.client.inject 两侧一致）
 const CLIENT_SERVICE_PROVIDERS = {
 	"slots": "@deepseek-ai/dsh-client-ui-renderer",
-	"settingsScope": "@deepseek-ai/dsh-client-ui-settings"
+	"settingsScope": "@deepseek-ai/dsh-client-ui-settings",
+	"remote": "@deepseek-ai/dsh-api-remotes"
 };
 // 需要校验编码的文本文件（相对仓库根）
 const TEXT_FILES = [
