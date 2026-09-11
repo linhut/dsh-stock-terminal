@@ -7,10 +7,14 @@ dist/
 # 推广素材
 .promo/
 PROMO_VIDEO_WORKFLOW.md
-tools/
 
 # 开发工作记忆
 .workbuddy/
+HANDOFF.md
+
+# 非发布必要项（测试 / 依赖锁文件只留在本地开发环境）
+tests/
+package-lock.json
 
 # Windows
 Thumbs.db
