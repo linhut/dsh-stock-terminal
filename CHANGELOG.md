@@ -5,6 +5,28 @@
 
 ## [Unreleased]
 
+## [v1.7.1] - 2026-09-13
+
+### 🔧 配置永久化（更新插件/换浏览器后不再需要重新配置）
+
+- **根因**：配置此前只存浏览器 localStorage（per-origin，更新插件、换浏览器、清理站点数据即丢）；
+  且客户端启动时从不回读 DSH settings 服务，系统设置里保存的值形同虚设
+- **修复**：DSH settings 服务（`dsh-settings-file` → `$DSH_HOME/settings.yaml` 落盘）成为配置权威源，
+  localStorage 降级为启动缓存
+  - 启动时 `settingsCtrl.getSnapshot()` 回读 `refreshMs`/`showTape` 合并进 `state.settings` 并持久化
+  - `settingsCtrl.subscribe()` 订阅服务变化，外部改动即时重排轮询/跑马灯
+- 新增持久化回归测试断言（启动回读 + 订阅变化 + 本地缓存三要素）
+
+### 🎨 皮肤图标替换为 dsh-manager 官网 logo
+
+- 顶栏品牌图标 → `https://dsh.linhut.cn/assets/images/logo.png`
+- 标签页 favicon → `https://dsh.linhut.cn/assets/images/favicon.png`
+- `brand` 改 `createElement("img")` 挂载（符合防 XSS 基线）；移除旧 `CANDLE_SVG`/`FAVICON_SVG` 内嵌 SVG
+
+### ✅ 验证
+
+- 合规检查 21/21、产物自检通过、单元测试 15/15（含新增持久化测试）
+
 ## [v1.7.0] - 2026-09-11
 
 ### 🔧 客户端旧 API 清理（对齐 DSH 官方 0.1.2-rc.1+ 契约）
