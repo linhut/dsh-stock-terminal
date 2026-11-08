@@ -52,7 +52,7 @@ const HARNESS_PEER_ONLY = /^@deepseek-ai\/dsh-/;
 // 客户端服务 → 提供方 bundle（client exports.inject 与 dsh.client.inject 两侧一致）
 const CLIENT_SERVICE_PROVIDERS = {
 	"slots": "@deepseek-ai/dsh-client-ui-renderer",
-	"settingsScope": "@deepseek-ai/dsh-client-ui-settings"
+	"configForms": "@deepseek-ai/dsh-client-ui-settings"
 };
 // 需要校验编码的文本文件（相对仓库根）
 const TEXT_FILES = [
@@ -221,7 +221,7 @@ if (pkgRaw.__parseError) {
 	const modernSettings = /installSection/.test(idxSrc) && /ctx\.inject\(\s*\[?\s*["']settings["']/.test(idxSrc);
 	check("pkg.settings-api-current", !legacySettings && (modernSettings || !/dsh-settings/.test(idxSrc)),
 		legacySettings ? "仍在使用已移除的 installSettingsSection/settingsNamespace（dsh-settings ≥0.1.2-rc.1 不再导出）" :
-		(modernSettings ? "ctx.inject([\"settings\"]) + installSection（最新 API）" : "未使用服务器端 settings（客户端 settingsScope 承载）"), true);
+		(modernSettings ? "ctx.inject([\"settings\"]) + installSection（最新 API）" : "未使用服务器端 settings（客户端 configForms 承载）"), true);
 
 	// 9. 服务器导出 Config schema（插件组合配置官方形态）
 	check("pkg.config-schema", /export\s+const\s+Config\s*=/.test(idxSrc),

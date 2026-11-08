@@ -240,7 +240,7 @@ dsh-stock-terminal/
 - 红涨绿跌配色：up `#e02e3d` / dark `#f23645`，down `#089981`，平灰；深色主题整套 CSS 变量切换
 - `Intl.DateTimeFormat` 按 Asia/Shanghai、Asia/Hong_Kong、America/New_York 实时判定交易时段
 - 数据轮询 30s（可调 15/30/60s），`ctx.effect` 一次性收回所有 DOM / 定时器
-- 客户端形态：`window.__ModuleLoader__.load({ id, factory })`，`exports.apply` + `exports.inject`（`slots` / `settingsScope`），设置卡走 `slots.inject("settings.section")`
+- 客户端形态：`window.__ModuleLoader__.load({ id, factory })`，`exports.apply` + `exports.inject`（`slots` / `configForms`），设置卡走 `slots.inject("settings.section")`
 - Canvas 蜡烛图绘制：日K/周K/月K 自适应、MA5/MA10 均线、成交量幅图、网格+价格+日期轴
 
 ---
@@ -255,7 +255,7 @@ dsh-stock-terminal/
 - **故障降级提示**：全部数据源失败时 toast 一次性提示并自动重试；代理失败自动降级浏览器直连
 - **设置双向即时生效**：系统设置卡修改刷新间隔/跑马灯后，面板轮询与跑马灯立即重排（自定义事件同步）
 - **K 线周期自适应**：服务端原生支持 day/week/month（腾讯 fqkline / Binance / Yahoo）；客户端聚合 fallback 确保不重启也能用
-- **最新 DSH API 兼容**：服务器设置接入采用 `ctx.inject(["settings"])` + `ctx.settings.installSection`（dsh-settings ≥ 0.1.0-rc.x 官方新 API，已移除的 `installSettingsSection`/`settingsNamespace` 不再使用）；客户端设置卡走 `slots` + `settingsScope` 服务，两侧均为当前官方接线
+- **最新 DSH API 兼容**：服务器设置接入采用 `ctx.inject(["settings"])` + `ctx.settings.installSection`；客户端设置卡走 `slots` + `configForms`，兼容 DSH 0.2.x 的主机端设置读写与订阅
 - **DSH 规范合规**：官方 harness 运行时包按规则声明（`@deepseek-ai/schemastery` 进 dependencies、客户端 react 进 peerDependencies），皮肤元数据与 bundle 接线一致（skin.json `bundleWired: true`），文本文件一律 UTF-8 无 BOM（显式 `readFileSync(path, "utf8")`，规避 Windows 默认 GBK 解码乱码）
 - **防御式边界**：quotes 最多 200 个符号、kline count 20–320、suggest key 1–50、分时点数上限 480；全部路由同源护栏（跨站 403）+ 8s 超时 + 失败独立降级
 
@@ -280,7 +280,7 @@ node tools/check-dsh-compliance.mjs --quiet    # 只输出 FAIL
 | `pkg.imports` | 静态扫描 lib/*.js 的 import/require（react 子路径归并），未声明依赖会被报出 |
 | `pkg.peer-deps:harness` | 官方 harness 运行时包（`@deepseek-ai/dsh-*`）必须 peerDependencies 且范围带显式预发布分支 |
 | `pkg.peer-deps:react` | 客户端 bundle `require("react")` → peerDependencies 须声明 react（skin-center 约定） |
-| `pkg.client-inject` | 客户端 `exports.inject` 服务（slots/settingsScope）与 `dsh.client.inject` 提供方 bundle 两侧一致 |
+| `pkg.client-inject` | 客户端 `exports.inject` 服务（slots/configForms）与 `dsh.client.inject` 提供方 bundle 两侧一致 |
 | `pkg.prepare` | prepare 脚本存在（git 源安装不构建 → 必须有自检；本仓库为 `verify-pack.mjs`） |
 | `pkg.files-cover-screenshots` | files 白名单覆盖 screenshots.json 引用（发布包自洽） |
 | `pkg.settings-api-current` | 服务器 settings 必须用 `ctx.inject(["settings"])` + `installSection`（旧 API 已移除） |
