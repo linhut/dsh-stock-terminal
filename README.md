@@ -27,7 +27,7 @@ Licensed under the MIT License. See the LICENSE file for details.
 | --- | --- |
 | 🎨 **交易终端皮肤** | 顶栏 K 线品牌图标 + 标题 + 持仓摘要芯片 + 设置齿轮 + 仿终端窗口按钮；红涨绿跌（亮/暗双主题完整 CSS 变量切换）；自定义 K 线 favicon 和页面标题 |
 | 📢 **实时行情跑马灯** | 自选列表无缝循环滚动，hover 暂停；**点击任一品种弹出个股 K 线图**（日K/周K/月K 可切换） |
-| 📈 **个股 K 线弹窗** | 日K / 周K / 月K 一键切换；**鼠标滚轮缩放**（锚点缩放，20~200 根）+ **拖拽平移**查看历史/近期；**十字光标**（hover 竖线+横线 + OHLC 浮层 + 价格轴/日期轴联动标注）；蜡烛图 + MA5/MA10 均线 + 成交量幅图 + 价格/日期轴 + 网格 + 区间涨跌统计；Esc/遮罩/✕ 关闭；窗口 resize 自适应重绘；A股/港股/指数走腾讯前复权，美股腾讯不足时回退 Yahoo，加密货币走 Binance；服务端 60s 缓存 + 在途去重 |
+| 📈 **个股 K 线弹窗** | 日K / 周K / 月K 一键切换；**鼠标滚轮缩放**（锚点缩放，20~200 根）+ **拖拽平移**查看历史/近期；**十字光标**（hover 竖线+横线 + OHLC 浮层 + 价格轴/日期轴联动标注）；蜡烛图 + MA5/MA10 均线 + 成交量幅图 + 价格/日期轴 + 网格 + 区间涨跌统计；Esc/遮罩/✕ 关闭；窗口 resize 自适应重绘；A股/港股/指数走腾讯前复权，美股腾讯不足时回退 Yahoo，加密货币优先 Binance、缺失时回退 Bitget；服务端 60s 缓存 + 在途去重 |
 | 🧭 **自选列表** | 增删 / ↑↓ 排序 / 移除；**拼音首字母 + 代码 + 名称模糊搜索联想**（如 `gzmt` → 贵州茅台、`600519`、`茅台`），内置 130+ 品种词典 + 在线 API 兜底，键盘 ↑↓ Enter Esc 操作 |
 | 💼 **持仓管理** | 模糊搜索添加持仓（与自选同款联想体验）；代码 + 数量 + 成本价 → 现价 / 市值 / 浮动盈亏 / 盈亏率，底部汇总总市值 / 总盈亏 / 总盈亏率；编辑 / 删除持仓 |
 | 🔔 **持仓盯盘提醒** | 每个持仓可设「盯盘高价 / 盯盘低价」（≥高价触发涨提醒、≤低价触发跌提醒），一次预警后标记已触发可手动重置重新武装；持仓行🔔快捷设置 + 表单字段双入口；状态栏实时显示激活盯盘数；触发时页面 Toast + 浏览器桌面通知（Notification API）双重提醒，首次设置时自动请求授权 |
@@ -171,7 +171,7 @@ dsh plugin --profile web remove @linxin666/dsh-client-ui-skin-stock
 | `sz` + 6 位 | `sz000001` 平安银行 · `sz399001` 深证成指 | 深市 | 腾讯行情 |
 | `hk` + 5 位 | `hk00700` 腾讯控股 · `hkHSI` 恒生指数 | 港股 / 恒指 | 腾讯行情 |
 | `us` + 代码 | `usAAPL` 苹果 · `usDJI` 道指 · `usIXIC` 纳指 | 美股 / 美指 | 腾讯行情 |
-| 大写组合 | `BTCUSDT` `ETHUSDT`… | 加密货币（24h） | Binance |
+| 大写组合 | `BTCUSDT` `ETHUSDT`… | 加密货币（24h） | Binance → Bitget |
 | `AAA/BBB` | `USD/CNY` | 外汇（美元等基准） | Frankfurter |
 
 > 数据由**宿主端聚合代理**统一拉取（`/plugins/dsh-stock/api/quotes`，GBK 解码、超时降级），浏览器零 CORS；代理不可用时自动降级为浏览器直连。
@@ -240,7 +240,7 @@ dsh-stock-terminal/
 - 红涨绿跌配色：up `#e02e3d` / dark `#f23645`，down `#089981`，平灰；深色主题整套 CSS 变量切换
 - `Intl.DateTimeFormat` 按 Asia/Shanghai、Asia/Hong_Kong、America/New_York 实时判定交易时段
 - 数据轮询 30s（可调 15/30/60s），`ctx.effect` 一次性收回所有 DOM / 定时器
-- 客户端形态：`window.__ModuleLoader__.load({ id, factory })`，`exports.apply` + `exports.inject`（`slots` / `settingsScope`），设置卡走 `slots.inject("settings.section")`
+- 客户端形态：`window.__ModuleLoader__.load({ id, factory })`，`exports.apply` + `exports.inject`（`slots` / `configForms`），设置卡走 `slots.inject("settings.section")`
 - Canvas 蜡烛图绘制：日K/周K/月K 自适应、MA5/MA10 均线、成交量幅图、网格+价格+日期轴
 
 ---
@@ -254,8 +254,8 @@ dsh-stock-terminal/
 - **联想防竞态**：搜索建议加序号计数器，慢的旧请求不会覆盖新输入的结果
 - **故障降级提示**：全部数据源失败时 toast 一次性提示并自动重试；代理失败自动降级浏览器直连
 - **设置双向即时生效**：系统设置卡修改刷新间隔/跑马灯后，面板轮询与跑马灯立即重排（自定义事件同步）
-- **K 线周期自适应**：服务端原生支持 day/week/month（腾讯 fqkline / Binance / Yahoo）；客户端聚合 fallback 确保不重启也能用
-- **最新 DSH API 兼容**：服务器设置接入采用 `ctx.inject(["settings"])` + `ctx.settings.installSection`（dsh-settings ≥ 0.1.0-rc.x 官方新 API，已移除的 `installSettingsSection`/`settingsNamespace` 不再使用）；客户端设置卡走 `slots` + `settingsScope` 服务，两侧均为当前官方接线
+- **K 线周期自适应**：服务端原生支持 day/week/month（腾讯 fqkline / Binance / Bitget / Yahoo）；客户端聚合 fallback 确保不重启也能用
+- **最新 DSH API 兼容**：服务器设置接入采用 `ctx.inject(["settings"])` + `ctx.settings.installSection`；客户端设置卡走 `slots` + `configForms`，兼容 DSH 0.2.x 的主机端设置读写与订阅
 - **DSH 规范合规**：官方 harness 运行时包按规则声明（`@deepseek-ai/schemastery` 进 dependencies、客户端 react 进 peerDependencies），皮肤元数据与 bundle 接线一致（skin.json `bundleWired: true`），文本文件一律 UTF-8 无 BOM（显式 `readFileSync(path, "utf8")`，规避 Windows 默认 GBK 解码乱码）
 - **防御式边界**：quotes 最多 200 个符号、kline count 20–320、suggest key 1–50、分时点数上限 480；全部路由同源护栏（跨站 403）+ 8s 超时 + 失败独立降级
 
@@ -280,7 +280,7 @@ node tools/check-dsh-compliance.mjs --quiet    # 只输出 FAIL
 | `pkg.imports` | 静态扫描 lib/*.js 的 import/require（react 子路径归并），未声明依赖会被报出 |
 | `pkg.peer-deps:harness` | 官方 harness 运行时包（`@deepseek-ai/dsh-*`）必须 peerDependencies 且范围带显式预发布分支 |
 | `pkg.peer-deps:react` | 客户端 bundle `require("react")` → peerDependencies 须声明 react（skin-center 约定） |
-| `pkg.client-inject` | 客户端 `exports.inject` 服务（slots/settingsScope）与 `dsh.client.inject` 提供方 bundle 两侧一致 |
+| `pkg.client-inject` | 客户端 `exports.inject` 服务（slots/configForms）与 `dsh.client.inject` 提供方 bundle 两侧一致 |
 | `pkg.prepare` | prepare 脚本存在（git 源安装不构建 → 必须有自检；本仓库为 `verify-pack.mjs`） |
 | `pkg.files-cover-screenshots` | files 白名单覆盖 screenshots.json 引用（发布包自洽） |
 | `pkg.settings-api-current` | 服务器 settings 必须用 `ctx.inject(["settings"])` + `installSection`（旧 API 已移除） |

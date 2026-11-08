@@ -5,6 +5,17 @@
 
 ## [Unreleased]
 
+### 增加 Bitget 行情备用源
+
+- 加密货币报价优先使用 Binance；接口不可用或缺少品种时，自动从 Bitget 补齐。
+- 加密货币日 K 在 Binance 失败时回退到 Bitget 日 K，并保留周 K/月 K 聚合。
+- 浏览器直连降级路径使用相同的 Binance → Bitget 选择顺序。
+
+### 修复 DSH 0.2.x 设置服务兼容性
+
+- 客户端从已移除的 `settingsScope` 改用 `configForms`，修复 Web boot 失败。
+- 系统设置卡继续支持主机端保存、读取和变化订阅；服务不可用时保留 localStorage 降级。
+
 ## [v1.7.2] - 2026-09-14
 
 ### 🐛 修复：未开盘（9:30 前/休市）时段 K 线图被压扁失效
